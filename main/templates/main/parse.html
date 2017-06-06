@@ -1,0 +1,46 @@
+<p>Parsing page: {{ url }}</p>
+
+<p>Title : {{title}}</p>
+
+<bold> Ingredients: </bold>
+
+<ul>
+{% for ing in ingredients %}
+    <li>
+    {% for word, tag in ing %}
+      <word data-balloon-visible data-balloon="{{tag}}" data-balloon-pos="up" >{{word}}</word>
+
+    {% endfor %}
+    </li>
+{% endfor %}
+</ul> 
+
+<bold> Steps: </bold>
+
+<ul>
+
+{% for step in steps %}
+    <li>
+      {{ step }}
+    </li>
+{% endfor %}
+</ul> 
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.4.0/balloon.min.css">
+
+<style>
+
+word
+{
+  margin-right:30px;
+  line-height:60px;
+}
+word::after
+{
+   line-height:10px;
+}
+
+</style>

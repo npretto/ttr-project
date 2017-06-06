@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/balloon-css/0.4.0/balloon.min.css">
+<label> Text to analyze: </label> <br>
+<textarea type="text" name="text" id="text"  style="width: 600px; height:400px" > {{ text }}</textarea>
+<button onclick="changeText()">Analyze</button>
+<br>
+<script>
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+function changeText()
+{
+  var text = document.getElementById("text").value;
+  console.log(text);
+  window.location.href = "/text/?text="+text.trim().replaceAll("\n","%0A");
+}
+</script>
+
+
+
+Sentences:
+<br>
+<br>
+<br>
+<br>
+<ul>
+{% for sentence in tagged_sentences %}
+    <li>
+    {% for word, tag in sentence %}
+      <word data-balloon-visible data-balloon="{{tag}}" data-balloon-pos="up" >{{word}}</word>
+
+    {% endfor %}
+    </li>
+{% endfor %}
+<ul>
+
+
+
+
+
+<style>
+
+word
+{
+  margin-right:30px;
+  line-height:60px;
+}
+word::after
+{
+   line-height:10px;
+}
+
+</style>
