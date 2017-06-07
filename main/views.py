@@ -9,6 +9,8 @@ from nltk.corpus import wordnet as wn
 from lxml import html
 from lxml import etree
 
+import requests_cache
+requests_cache.install_cache('http_cache', backend='sqlite')
 
 
 
