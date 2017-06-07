@@ -1,8 +1,9 @@
 from django.shortcuts import render
-import requests
 from django.http import HttpResponse
 
 import nltk
+import requests
+import re
 from nltk.corpus import wordnet as wn
 
 from lxml import html
@@ -45,8 +46,12 @@ def parse(request,url):
   ingredients = tree.xpath('//span[@class="recipe-ingred_txt added"]/text()')
   steps = tree.xpath('//span[@class="recipe-directions__list--item"]/text()')
 
+  #rimuovo le cose tra parentesi
+  ingredients  = [re.sub('\(.*\)', '', sent) for sent in ingredients]
+
   ingredients = [nltk.word_tokenize(sent) for sent in ingredients]
 
+  ingredients = [nltk.pos_tag(sent) for sent in ingredients]
   ingredients = tag_ingredients(ingredients)
 
   context['ingredients'] = ingredients
@@ -61,25 +66,24 @@ def parse(request,url):
 
 
 def tag_ingredients(ingredients):
-  return [[tag_word(word) for word in sent] for sent in ingredients]
+  return [[tag_word(word,pos_tag) for (word,pos_tag) in sent] for sent in ingredients]
 
-def tag_word(word):
+def tag_word(word,pos_tag):
   #return (word, "AA")
   print("tagging " + word)
-  tag = "N/A";
-  if is_containerful(word) == True:
+  hypers = hyper(word)
+  tag = "ING_NAME";
+  if 'containerful.n.01' in hypers or 'small_indefinite_quantity.n.01' in hypers:
     tag = "UNIT"
     print("is containerful == True")
+  if pos_tag == "CD":
+    tag = "QNT"
+
+  if pos_tag in [",",":a"]:
+    tag = "IRR" #irrelevant
   
-  return (word, tag)
+  return (word, pos_tag, tag)
 
-
-def is_containerful(word):
-  #for syn in wn.synsets(word):
-  #  if syn.hypernyms()[0].name() == 'containerful.n.01':
-  #    return True;
-  #return False;
-  return 'containerful.n.01' in hyper(word)
 
 def hyper(word):
   #return [syn.hypernyms()[0].name() for syn in wn.synsets(word)]

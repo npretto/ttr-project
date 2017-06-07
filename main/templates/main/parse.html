@@ -7,8 +7,8 @@
 <ul>
 {% for ing in ingredients %}
     <li>
-    {% for word, tag in ing %}
-      <word data-balloon-visible data-balloon="{{tag}}" data-balloon-pos="up" >{{word}}</word>
+    {% for word, pos_tag, tag in ing %}
+      <word class="{{tag}}"  data-balloon="{{pos_tag}}" data-balloon-pos="up" >{{word}}</word>
 
     {% endfor %}
     </li>
@@ -35,12 +35,28 @@
 
 word
 {
-  margin-right:30px;
-  line-height:60px;
+  margin-right:0px;
+  line-height:20px;
 }
 word::after
 {
-   line-height:10px;
+  line-height:10px;
+}
+</style>
+
+<style>
+
+.QNT
+{
+  border-bottom: 3px solid blue;
+}
+.UNIT
+{
+  border-bottom: 3px solid green;
+}
+.ING_NAME
+{
+  border-bottom: 3px solid red;
 }
 
 </style>
