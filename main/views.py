@@ -10,7 +10,7 @@ from lxml import html
 from lxml import etree
 
 import requests_cache
-requests_cache.install_cache('http_cache', backend='sqlite')
+requests_cache.install_cache('http_cache', backend='sqlite', expire_after=None)
 
 
 
@@ -56,14 +56,37 @@ def parse(request,url):
   ingredients = [nltk.pos_tag(sent) for sent in ingredients]
   ingredients = tag_ingredients(ingredients)
 
-  main_ingredients = get_main_ingredients(ingredients)
+  splitted_ingredients = split_ingredients(ingredients)
+
+
+  #main_ingredients = get_main_ingredients(ingredients)
 
   context['ingredients'] = ingredients
   context['steps'] = steps
-  context['main'] = main_ingredients
+  context['splitted_ingredients'] = splitted_ingredients
+  #context['main'] = main_ingredients
   #context['tagged_ingredients'] = tagged_ingredients
 
   return render(request, 'main/parse.html', context)
+
+def split_ingredients(ingredients):
+  ings = []
+  for sentence in ingredients:
+    quantity = []
+    unit = []
+    ing = []
+    flavour = []
+    for (word,pos_tag,tag) in sentence:
+      if tag == "QNT":
+        quantity.append(word)
+      if tag == "UNIT":
+        unit.append(word)
+      if tag == "MAIN_ING":
+        ing.append(word)
+      if tag == "ING_NAME":
+        flavour.append(word)
+    ings.append( (" ".join(quantity)," ".join(unit)," ".join(ing)," ".join(flavour) ) )
+  return ings
 
 
 def get_main_ingredients(ingredients):

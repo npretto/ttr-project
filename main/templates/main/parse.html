@@ -15,16 +15,23 @@
 {% endfor %}
 </ul> 
 
-<ul>
-{% for ing in main %}
-    <li>
-    {% for word in ing%}
-      <word class="{{tag}}"  data-balloon="{{pos_tag}}" data-balloon-pos="up" >{{word}}</word>
 
-    {% endfor %}
-    </li>
+<table>
+    <tr>
+      <th>Quantity</th>
+      <th>Unit</th>
+      <th>Ingredient</th>
+      <th>"Flavour"</th>
+    </tr>
+{% for qnt, cazzo, main, flav in splitted_ingredients %}
+    <tr>
+      <td> {{qnt}} </td>
+      <td> {{cazzo}} </td>
+      <td> <b> {{main}} </b></td>
+      <td> {{flav}} </td>
+    </tr>
 {% endfor %}
-</ul> 
+</table> 
 
 <bold> Steps: </bold>
 
@@ -52,6 +59,17 @@ word
 word::after
 {
   line-height:10px;
+}
+
+table{
+  border-collapse: collapse;
+}
+th{
+  background-color:gray;
+}
+th,tr,td {
+  border: 1px solid black;
+  text-align:center;
 }
 </style>
 
