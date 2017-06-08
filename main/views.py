@@ -13,6 +13,10 @@ import requests_cache
 requests_cache.install_cache('http_cache', backend='sqlite', expire_after=None)
 
 
+from pint import UnitRegistry
+ureg = UnitRegistry()
+Q = ureg.Quantity
+
 
 def index(request):
 
@@ -58,7 +62,6 @@ def parse(request,url):
 
   splitted_ingredients = split_ingredients(ingredients)
 
-
   #main_ingredients = get_main_ingredients(ingredients)
 
   context['ingredients'] = ingredients
@@ -68,6 +71,8 @@ def parse(request,url):
   #context['tagged_ingredients'] = tagged_ingredients
 
   return render(request, 'main/parse.html', context)
+
+
 
 def split_ingredients(ingredients):
   ings = []
@@ -85,7 +90,24 @@ def split_ingredients(ingredients):
         ing.append(word)
       if tag == "ING_NAME":
         flavour.append(word)
-    ings.append( (" ".join(quantity)," ".join(unit)," ".join(ing)," ".join(flavour) ) )
+    quantity = " ".join(quantity)
+    unit = " ".join(unit)
+    ing = " ".join(ing)
+    flavour = " ".join(flavour)
+
+    pint = None
+
+    try:
+      pint = Q(quantity + "  " + unit).to('ml')
+    except:
+      pass
+
+    try:
+      pint = Q(quantity + "  " + unit).to('g')
+    except:
+      pass
+
+    ings.append( (quantity, unit, ing, flavour, pint) )
   return ings
 
 

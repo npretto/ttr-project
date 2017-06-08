@@ -22,13 +22,16 @@
       <th>Unit</th>
       <th>Ingredient</th>
       <th>"Flavour"</th>
+      <th>PINT</th>
     </tr>
-{% for qnt, cazzo, main, flav in splitted_ingredients %}
+{% for qnt, unit, main, flav, pint in splitted_ingredients %}
     <tr>
       <td> {{qnt}} </td>
-      <td> {{cazzo}} </td>
+      <td> {{unit}} </td>
       <td> <b> {{main}} </b></td>
       <td> {{flav}} </td>
+      <td> {{pint}} </td>
+
     </tr>
 {% endfor %}
 </table> 
