@@ -15,6 +15,17 @@
 {% endfor %}
 </ul> 
 
+<ul>
+{% for ing in main %}
+    <li>
+    {% for word in ing%}
+      <word class="{{tag}}"  data-balloon="{{pos_tag}}" data-balloon-pos="up" >{{word}}</word>
+
+    {% endfor %}
+    </li>
+{% endfor %}
+</ul> 
+
 <bold> Steps: </bold>
 
 <ul>
@@ -48,15 +59,21 @@ word::after
 
 .QNT
 {
-  border-bottom: 3px solid blue;
+  border-bottom: 2px solid blue;
 }
 .UNIT
 {
-  border-bottom: 3px solid green;
+  border-bottom: 2px solid green;
 }
 .ING_NAME
 {
-  border-bottom: 3px solid red;
+  border-bottom: 2px solid orange;
 }
+
+.MAIN_ING
+{
+  border-bottom: 4px solid red;
+}
+
 
 </style>

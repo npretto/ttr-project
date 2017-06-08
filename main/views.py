@@ -56,15 +56,25 @@ def parse(request,url):
   ingredients = [nltk.pos_tag(sent) for sent in ingredients]
   ingredients = tag_ingredients(ingredients)
 
+  main_ingredients = get_main_ingredients(ingredients)
+
   context['ingredients'] = ingredients
   context['steps'] = steps
+  context['main'] = main_ingredients
   #context['tagged_ingredients'] = tagged_ingredients
 
   return render(request, 'main/parse.html', context)
 
 
-
-
+def get_main_ingredients(ingredients):
+  main = []
+  for sentence in ingredients:
+    words = []
+    for (word,pos_tag,tag) in sentence:
+      if tag == "MAIN_ING":
+        words.append(word)
+    main.append(words)
+  return main
 
 def tag_ingredients(ingredients):
   return [[tag_word(word,pos_tag) for (word,pos_tag) in sent] for sent in ingredients]
@@ -74,6 +84,7 @@ def tag_word(word,pos_tag):
   print("tagging " + word)
   hypers = get_hypers(word)
   tag = "ING_NAME";
+
 
   if 'containerful.n.01' in hypers or 'small_indefinite_quantity.n.01' in hypers:
     tag = "UNIT"
@@ -85,9 +96,12 @@ def tag_word(word,pos_tag):
   if pos_tag == "CD":
     tag = "QNT"
 
-  if pos_tag in [",",":a"]:
+  if pos_tag in [",",":"]:
     tag = "IRR" #irrelevant
   
+  if tag == "ING_NAME" and pos_tag in ["NN","NNS"]:
+    tag = "MAIN_ING"
+
   return (word, pos_tag, tag)
 
 
