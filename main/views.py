@@ -66,18 +66,22 @@ def parse(request,url):
 
 
 
-
 def tag_ingredients(ingredients):
   return [[tag_word(word,pos_tag) for (word,pos_tag) in sent] for sent in ingredients]
 
 def tag_word(word,pos_tag):
   #return (word, "AA")
   print("tagging " + word)
-  hypers = hyper(word)
+  hypers = get_hypers(word)
   tag = "ING_NAME";
+
   if 'containerful.n.01' in hypers or 'small_indefinite_quantity.n.01' in hypers:
     tag = "UNIT"
-    print("is containerful == True")
+
+  for h in hypers:
+    if 'unit' in h:
+      tag = "UNIT"
+
   if pos_tag == "CD":
     tag = "QNT"
 
@@ -87,7 +91,7 @@ def tag_word(word,pos_tag):
   return (word, pos_tag, tag)
 
 
-def hyper(word):
+def get_hypers(word):
   #return [syn.hypernyms()[0].name() for syn in wn.synsets(word)]
   hypers = []
   for syn in wn.synsets(word):
